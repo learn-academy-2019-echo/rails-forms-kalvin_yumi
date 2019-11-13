@@ -6,22 +6,19 @@ class BlogPostsController < ApplicationController
 
   def show
     @post = BlogPost.find(params[:id])
-    #render "show.html.erb"
   end
 
   def new
+      @post = BlogPost.new
   end
 
   def create
-      @post = BlogPost.create(
-          title: params[:title],
-          content: params[:content]
-      )
+      @post = BlogPost.new(post_params)
 
       if @post.save
           redirect_to @post
       else
-          render action: :create
+          render action: :new
       end
   end
 
@@ -33,5 +30,12 @@ class BlogPostsController < ApplicationController
         else
             redirect_to blog_post_path(@post)
         end
+    end
+
+    private
+    def post_params
+        params
+            .require(:blog_post)
+            .permit(:title, :content)
     end
 end
